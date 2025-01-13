@@ -30,7 +30,7 @@ body {
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    background-color: #00A5E0; /* Powder Blue */
+    background-color: #66193c; /* Powder Blue */
     color: white;
     transition: background-color 0.3s ease;
 }
@@ -41,7 +41,7 @@ body {
 
 .mode button.active {
     background-color: #FFC20E; /* Sunshine Gold */
-    color: #002A5E;
+    color: #579b70;
 }
 
 h1 {
@@ -49,7 +49,7 @@ h1 {
 }
 
 .bolt-up {
-    color: #FFC20E; /* Sunshine Gold */
+    color: #927931; /* Sunshine Gold */
     font-size: 1.5rem;
     font-weight: bold;
     margin-top: 1rem;
