@@ -2,27 +2,142 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
     <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Pomodoro Timer</h1>
-        <div class="timer">
-            <span id="minutes">25</span>:<span id="seconds">00</span>
+    <div class="app">
+        <header class="header">
+            <h1>Pomodoro</h1>
+            <button id="settings-toggle" class="icon-btn" aria-label="Settings">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+        </header>
+
+        <div class="mode-tabs">
+            <button class="mode-tab active" data-mode="work">Focus</button>
+            <button class="mode-tab" data-mode="shortBreak">Short Break</button>
+            <button class="mode-tab" data-mode="longBreak">Long Break</button>
         </div>
+
+        <div class="timer-container">
+            <svg class="progress-ring" viewBox="0 0 260 260">
+                <circle class="progress-ring__bg" cx="130" cy="130" r="120" />
+                <circle class="progress-ring__circle" cx="130" cy="130" r="120" />
+            </svg>
+            <div class="timer-display">
+                <span id="timer-text">25:00</span>
+                <span id="timer-label">FOCUS</span>
+            </div>
+        </div>
+
         <div class="controls">
-            <button id="start">Start</button>
-            <button id="pause">Pause</button>
-            <button id="reset">Reset</button>
+            <button id="btn-reset" class="control-btn secondary" aria-label="Reset">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                </svg>
+            </button>
+            <button id="btn-start" class="control-btn primary" aria-label="Start">
+                <svg id="icon-play" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <svg id="icon-pause" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
+                </svg>
+            </button>
+            <button id="btn-skip" class="control-btn secondary" aria-label="Skip">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                    <line x1="19" y1="5" x2="19" y2="19"></line>
+                </svg>
+            </button>
         </div>
-        <div class="mode">
-            <button id="work" class="active">Work</button>
-            <button id="break">Break</button>
+
+        <div class="session-tracker">
+            <span id="session-count">Session 1 of 4</span>
+            <div class="session-dots" id="session-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
         </div>
-        <div class="bolt-up">⚡ BOLT UP! ⚡</div>
+
+        <div class="settings-panel" id="settings-panel">
+            <div class="settings-backdrop" id="settings-backdrop"></div>
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                    <button id="settings-close" class="icon-btn" aria-label="Close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="setting-group">
+                    <label>Focus Duration</label>
+                    <div class="stepper">
+                        <button class="stepper-btn" data-setting="work" data-dir="-1">-</button>
+                        <span id="setting-work">25</span> min
+                        <button class="stepper-btn" data-setting="work" data-dir="1">+</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label>Short Break</label>
+                    <div class="stepper">
+                        <button class="stepper-btn" data-setting="shortBreak" data-dir="-1">-</button>
+                        <span id="setting-shortBreak">5</span> min
+                        <button class="stepper-btn" data-setting="shortBreak" data-dir="1">+</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label>Long Break</label>
+                    <div class="stepper">
+                        <button class="stepper-btn" data-setting="longBreak" data-dir="-1">-</button>
+                        <span id="setting-longBreak">15</span> min
+                        <button class="stepper-btn" data-setting="longBreak" data-dir="1">+</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label>Sessions before long break</label>
+                    <div class="stepper">
+                        <button class="stepper-btn" data-setting="sessions" data-dir="-1">-</button>
+                        <span id="setting-sessions">4</span>
+                        <button class="stepper-btn" data-setting="sessions" data-dir="1">+</button>
+                    </div>
+                </div>
+                <div class="setting-group toggle-group">
+                    <label>Auto-start breaks</label>
+                    <button class="toggle" id="toggle-autoBreak" aria-pressed="true">
+                        <span class="toggle-slider"></span>
+                    </button>
+                </div>
+                <div class="setting-group toggle-group">
+                    <label>Auto-start focus</label>
+                    <button class="toggle" id="toggle-autoWork" aria-pressed="false">
+                        <span class="toggle-slider"></span>
+                    </button>
+                </div>
+                <div class="setting-group toggle-group">
+                    <label>Sound</label>
+                    <button class="toggle" id="toggle-sound" aria-pressed="true">
+                        <span class="toggle-slider"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
-</html> 
+</html>
