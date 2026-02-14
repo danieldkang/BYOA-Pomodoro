@@ -3,26 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Timer</title>
+    <title>RoomVision 3D - Interior Design Studio</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Pomodoro Timer</h1>
-        <div class="timer">
-            <span id="minutes">25</span>:<span id="seconds">00</span>
-        </div>
-        <div class="controls">
-            <button id="start">Start</button>
-            <button id="pause">Pause</button>
-            <button id="reset">Reset</button>
-        </div>
-        <div class="mode">
-            <button id="work" class="active">Work</button>
-            <button id="break">Break</button>
-        </div>
-        <div class="bolt-up">⚡ BOLT UP! ⚡</div>
+    <div id="app">
+        <!-- Header -->
+        <header id="header">
+            <div class="logo">
+                <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                    <path d="M4 28V12L16 4l12 8v16H4z" stroke="currentColor" stroke-width="2.5" fill="none"/>
+                    <rect x="12" y="18" width="8" height="10" stroke="currentColor" stroke-width="2"/>
+                    <rect x="8" y="13" width="5" height="4" stroke="currentColor" stroke-width="1.5"/>
+                    <rect x="19" y="13" width="5" height="4" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <h1>RoomVision <span>3D</span></h1>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-view="upload">Upload</button>
+                <button class="nav-btn" data-view="editor">3D Editor</button>
+                <button class="nav-btn" data-view="designs">Design Ideas</button>
+            </nav>
+        </header>
+
+        <!-- Upload View -->
+        <section id="upload-view" class="view active">
+            <div class="upload-container">
+                <div id="drop-zone" class="drop-zone">
+                    <div class="drop-zone-content">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                            <path d="M32 44V20M32 20L22 30M32 20L42 30" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 40v8a4 4 0 004 4h40a4 4 0 004-4v-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
+                        <h2>Drop your room photos here</h2>
+                        <p>or click to browse files</p>
+                        <span class="file-types">Supports JPG, PNG, WebP</span>
+                    </div>
+                    <input type="file" id="file-input" accept="image/*" multiple hidden>
+                </div>
+
+                <div id="uploaded-photos" class="photo-grid"></div>
+
+                <div id="room-config" class="room-config hidden">
+                    <h3>Room Configuration</h3>
+                    <div class="config-row">
+                        <div class="config-field">
+                            <label>Room Type</label>
+                            <select id="room-type">
+                                <option value="living">Living Room</option>
+                                <option value="bedroom">Bedroom</option>
+                                <option value="kitchen">Kitchen</option>
+                                <option value="bathroom">Bathroom</option>
+                                <option value="office">Home Office</option>
+                                <option value="dining">Dining Room</option>
+                            </select>
+                        </div>
+                        <div class="config-field">
+                            <label>Room Width (ft)</label>
+                            <input type="number" id="room-width" value="12" min="6" max="40">
+                        </div>
+                        <div class="config-field">
+                            <label>Room Depth (ft)</label>
+                            <input type="number" id="room-depth" value="14" min="6" max="40">
+                        </div>
+                        <div class="config-field">
+                            <label>Ceiling Height (ft)</label>
+                            <input type="number" id="room-height" value="9" min="7" max="16">
+                        </div>
+                    </div>
+                    <button id="generate-3d-btn" class="primary-btn">Generate 3D Room</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3D Editor View -->
+        <section id="editor-view" class="view">
+            <div class="editor-layout">
+                <div class="editor-sidebar">
+                    <h3>Room Controls</h3>
+
+                    <div class="control-group">
+                        <label>Wall Color</label>
+                        <div class="color-picker-row">
+                            <input type="color" id="wall-color" value="#f5f0eb">
+                            <span class="color-label">#f5f0eb</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Floor Material</label>
+                        <div class="material-options">
+                            <button class="mat-btn active" data-floor="hardwood">Hardwood</button>
+                            <button class="mat-btn" data-floor="carpet">Carpet</button>
+                            <button class="mat-btn" data-floor="tile">Tile</button>
+                            <button class="mat-btn" data-floor="marble">Marble</button>
+                            <button class="mat-btn" data-floor="concrete">Concrete</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Lighting</label>
+                        <input type="range" id="light-intensity" min="0" max="200" value="100">
+                        <div class="range-labels">
+                            <span>Dim</span><span>Bright</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Time of Day</label>
+                        <div class="time-options">
+                            <button class="time-btn" data-time="morning">Morning</button>
+                            <button class="time-btn active" data-time="afternoon">Afternoon</button>
+                            <button class="time-btn" data-time="evening">Evening</button>
+                            <button class="time-btn" data-time="night">Night</button>
+                        </div>
+                    </div>
+
+                    <h3>Add Furniture</h3>
+                    <div id="furniture-list" class="furniture-list">
+                        <button class="furniture-btn" data-item="sofa">Sofa</button>
+                        <button class="furniture-btn" data-item="chair">Chair</button>
+                        <button class="furniture-btn" data-item="coffeetable">Coffee Table</button>
+                        <button class="furniture-btn" data-item="bookshelf">Bookshelf</button>
+                        <button class="furniture-btn" data-item="lamp">Floor Lamp</button>
+                        <button class="furniture-btn" data-item="plant">Plant</button>
+                        <button class="furniture-btn" data-item="rug">Area Rug</button>
+                        <button class="furniture-btn" data-item="bed">Bed</button>
+                        <button class="furniture-btn" data-item="desk">Desk</button>
+                        <button class="furniture-btn" data-item="tvstand">TV Stand</button>
+                        <button class="furniture-btn" data-item="diningtable">Dining Table</button>
+                        <button class="furniture-btn" data-item="sidetable">Side Table</button>
+                    </div>
+
+                    <div class="control-group" style="margin-top: 12px;">
+                        <button id="clear-furniture" class="secondary-btn">Clear All Furniture</button>
+                    </div>
+                </div>
+
+                <div class="editor-main">
+                    <div id="viewport-container">
+                        <canvas id="three-canvas"></canvas>
+                        <div id="viewport-overlay">
+                            <span id="camera-info">Orbit: Left Click &middot; Pan: Right Click &middot; Zoom: Scroll</span>
+                        </div>
+                    </div>
+                    <div class="viewport-toolbar">
+                        <button id="reset-camera" class="tool-btn" title="Reset Camera">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                            Reset
+                        </button>
+                        <button id="toggle-grid" class="tool-btn active" title="Toggle Grid">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                            Grid
+                        </button>
+                        <button id="toggle-walls" class="tool-btn" title="Toggle Wall Transparency">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+                            Walls
+                        </button>
+                        <button id="screenshot-btn" class="tool-btn" title="Take Screenshot">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                            Screenshot
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Ideas View -->
+        <section id="designs-view" class="view">
+            <div class="designs-container">
+                <div class="designs-header">
+                    <h2>Design Ideas</h2>
+                    <p>Select a style to transform your room</p>
+                </div>
+
+                <div class="style-selector">
+                    <button class="style-btn active" data-style="modern">
+                        <div class="style-preview modern-preview"></div>
+                        <span>Modern</span>
+                    </button>
+                    <button class="style-btn" data-style="minimalist">
+                        <div class="style-preview minimalist-preview"></div>
+                        <span>Minimalist</span>
+                    </button>
+                    <button class="style-btn" data-style="scandinavian">
+                        <div class="style-preview scandi-preview"></div>
+                        <span>Scandinavian</span>
+                    </button>
+                    <button class="style-btn" data-style="industrial">
+                        <div class="style-preview industrial-preview"></div>
+                        <span>Industrial</span>
+                    </button>
+                    <button class="style-btn" data-style="bohemian">
+                        <div class="style-preview boho-preview"></div>
+                        <span>Bohemian</span>
+                    </button>
+                    <button class="style-btn" data-style="midcentury">
+                        <div class="style-preview midcentury-preview"></div>
+                        <span>Mid-Century</span>
+                    </button>
+                    <button class="style-btn" data-style="coastal">
+                        <div class="style-preview coastal-preview"></div>
+                        <span>Coastal</span>
+                    </button>
+                    <button class="style-btn" data-style="japandi">
+                        <div class="style-preview japandi-preview"></div>
+                        <span>Japandi</span>
+                    </button>
+                </div>
+
+                <div id="design-output" class="design-output">
+                    <div class="design-card placeholder-card">
+                        <div class="placeholder-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                        </div>
+                        <p>Upload a photo and generate your 3D room first, then come back here for design ideas!</p>
+                    </div>
+                </div>
+
+                <div id="design-details" class="design-details hidden">
+                    <div class="detail-columns">
+                        <div class="detail-section">
+                            <h3>Color Palette</h3>
+                            <div id="color-palette" class="color-palette"></div>
+                        </div>
+                        <div class="detail-section">
+                            <h3>Recommended Furniture</h3>
+                            <div id="furniture-recs" class="furniture-recs"></div>
+                        </div>
+                        <div class="detail-section">
+                            <h3>Design Tips</h3>
+                            <ul id="design-tips" class="design-tips"></ul>
+                        </div>
+                    </div>
+                    <button id="apply-design" class="primary-btn">Apply Style to 3D Room</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Toast notification -->
+        <div id="toast" class="toast hidden"></div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="script.js"></script>
 </body>
-</html> 
+</html>
